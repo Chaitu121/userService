@@ -25,9 +25,8 @@ phases:
   build:
     commands:
       - echo "Building Docker image..."
-      - docker build -t chaitanya_registry23 .
-      - docker tag 691630018353.dkr.ecr.us-east-2.amazonaws.com/chaitanya_registry23:latest
-
+      - docker build -t userService:latest .
+      - docker tag userService:latest 691630018353.dkr.ecr.us-east-2.amazonaws.com/chaitanya_registry23:latest
   post_build:
     commands:
       - echo "Pushing Docker image to ECR..."
