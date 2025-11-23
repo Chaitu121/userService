@@ -27,12 +27,12 @@ phases:
       - echo "Building Docker image..."
       - docker build -t userService:latest .
       - echo Tagging image...
-      - docker tag userService:latest 691630018353.dkr.ecr.us-east-2.amazonaws.com/chaitanya_registry23:latest
       - echo "Show docker images for debug"
       - docker images
   post_build:
     commands:
       - echo "Pushing Docker image to ECR..."
+      - docker tag userService:latest 691630018353.dkr.ecr.us-east-2.amazonaws.com/chaitanya_registry23:latest
       - docker push 691630018353.dkr.ecr.us-east-2.amazonaws.com/chaitanya_registry23:latest
       - echo "Build and Push completed successfully!"
 
