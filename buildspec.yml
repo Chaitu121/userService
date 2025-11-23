@@ -1,0 +1,41 @@
+version: 0.2
+
+env:
+  variables:
+    IMAGE_REPO_NAME: "chaitanya_registry23"
+    IMAGE_TAG: "latest"
+  parameter-store:
+    AWS_REGION: "/codebuild/region"
+
+phases:
+  install:
+    runtime-versions:
+      java: corretto17
+      docker: 20
+    commands:
+      - echo "Installing Maven..."
+      - mvn -version
+
+  pre_build:
+    commands:
+      - echo "Logging in to Amazon ECR..."
+      - aws --version
+      - aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 691630018353.dkr.ecr.us-east-2.amazonaws.com
+      - echo "Starting Maven build..."
+      - mvn clean package -DskipTests
+
+  build:
+    commands:
+      - echo "Building Docker image..."
+      - docker build -t chaitanya_registry23 .
+      - docker tag 691630018353.dkr.ecr.us-east-2.amazonaws.com/chaitanya_registry23:latest
+
+  post_build:
+    commands:
+      - echo "Pushing Docker image to ECR..."
+      - docker push 691630018353.dkr.ecr.us-east-2.amazonaws.com/chaitanya_registry23:latest
+      - echo "Build and Push completed successfully!"
+
+artifacts:
+  files:
+    - target/*.jar
